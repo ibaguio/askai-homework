@@ -1,0 +1,21 @@
+{
+    "entryFile": "src/server.ts",
+    "noImplicitAdditionalProperties": "throw-on-extras",
+    "controllerPathGlobs": [
+        "src/**/*Controller.ts"
+    ],
+    "spec": {
+        "name": "HW - Chunk Holder",
+        "description": "MOCKED SERVER - Will retrive chunks by chunk ID",
+        "basePath": "/",
+        "entryFile": "./src/server.ts",
+        "outputDirectory": "public",
+        "specVersion": 3,
+        "tags": []
+    },
+    "routes": {
+        "basePath": "/",
+        "routesDir": "./src/fixtures/express",
+        "middleware": "express"
+    }
+}
