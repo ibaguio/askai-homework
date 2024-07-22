@@ -4,7 +4,7 @@ import random
 
 class InterferenceRunnerService:
 	# TODO: load from env
-	ENDPOINT_ASK = "https://inference-runner.hw.ask-ai.co/ask/"
+	ENDPOINT_BASE = "https://inference-runner.hw.ask-ai.co"
 	API_KEYS = (
 		"7c4e87e6-aef8-467a-b43a-4f80147453bf",
 		"3211bc12-9ba4-4169-b8a3-dbc92494fa76",
@@ -29,7 +29,7 @@ class InterferenceRunnerService:
 		payload = {"question": question}
 
 		response = requests.post(
-			self.ENDPOINT_ASK,
+			f"{self.ENDPOINT_BASE}/ask/",
 			json=payload,
 			headers=self._get_credentials(),
 		)
