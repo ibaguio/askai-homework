@@ -75,11 +75,9 @@ class ChunkHolderService:
 		# TODO: handle errors
 
 	def _get_credentials(self):
-		headers = {
+		return {
 			"Authorization": self._get_jwt_token()
 		}
-		print(headers)
-		return headers
 
 	def get_chunk_content(self, chunk_id: str, credentials: dict=None) -> str:
 		# TODO: add validation that chunk_id is a uuid?
@@ -94,7 +92,8 @@ class ChunkHolderService:
 		if response.status_code == 200:
 			return response.json()
 
-	def get_chunk_contents(self, chunk_ids: list):
+	def get_chunk_contents(self, chunk_ids: list) -> list:
+		"""Return contents of multiple Chunks"""
 		credentials = self._get_credentials()
 
 		# TODO: can possibly support async calls to individual chunk content
