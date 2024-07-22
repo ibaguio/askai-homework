@@ -40,11 +40,11 @@ class InterferenceRunnerService:
 		# TODO: Handle errors
 
 	def ask_question(self, question: str, confidence_level: int | float =70) -> list:
-		"""Return chunks for a question atleast a given confidence_level."""
+		"""Return chunks IDs for a question atleast a given confidence_level."""
 
 		chunks = self._ask(question)
 		valid_chunks = [
-			chunk
+			chunk["chunkId"]
 			for chunk in chunks
 			if chunk["confidence"] >= confidence_level
 		]
