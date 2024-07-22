@@ -81,14 +81,25 @@ class ChunkHolderService:
 		print(headers)
 		return headers
 
-	def get_chunk_content(self, chunk_id) -> str:
+	def get_chunk_content(self, chunk_id: str, credentials: dict=None) -> str:
 		# TODO: add validation that chunk_id is a uuid?
 		assert isinstance(chunk_id, str)
 
+		credentials = credentials or self._get_credentials()
 		response = requests.get(
 			f"{self.ENDPOINT_BASE}/chunks/{chunk_id}",
-			headers=self._get_credentials()
+			headers=credentials
 		)
 
 		if response.status_code == 200:
 			return response.json()
+
+	def get_chunk_contents(self, chunk_ids: list):
+		credentials = self._get_credentials()
+
+		# TODO: can possibly support async calls to individual chunk content
+		# to parallelize instead of serial get
+		return [
+			self.get_chunk_content(chunk_id, credentials)
+			for chunk_id in chunk_ids
+		]
