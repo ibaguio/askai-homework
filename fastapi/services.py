@@ -11,8 +11,10 @@ class InterferenceRunnerService:
 		"e4f24b15-f271-4abd-8c8f-3ec106941bfa",
 	)
 
-	def _get_api_key(self):
-		return random.choice(self.API_KEYS)
+	def _get_credentials(self):
+		return {
+			"X-API-Key": random.choice(self.API_KEYS),
+		}
 
 	def _ask(self, question) -> list:
 		"""Send a POST request to the /ask endpoint.
@@ -29,9 +31,7 @@ class InterferenceRunnerService:
 		response = requests.post(
 			self.ENDPOINT_ASK,
 			json=payload,
-			headers={
-				"X-API-Key": self._get_api_key()
-			}
+			headers=self._get_credentials(),
 		)
 
 		if response.status_code == 200:
