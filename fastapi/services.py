@@ -1,6 +1,13 @@
 import requests
 import random
 
+# TODO: add logging
+
+__all__ = (
+	"InterferenceRunnerService",
+	"ChunkHolderService",
+)
+
 
 class InterferenceRunnerService:
 	# TODO: load from env
@@ -11,7 +18,7 @@ class InterferenceRunnerService:
 		"e4f24b15-f271-4abd-8c8f-3ec106941bfa",
 	)
 
-	def _get_credentials(self):
+	def _get_credentials(self) -> dict:
 		return {
 			"X-API-Key": random.choice(self.API_KEYS),
 		}
@@ -40,11 +47,21 @@ class InterferenceRunnerService:
 		# TODO: Handle errors
 
 	def ask_question(self, question: str, confidence_level: int | float =70) -> list:
-		"""Return chunks IDs for a question atleast a given confidence_level."""
+		"""Return chunks for a question atleast a given confidence_level."""
+
+		# dev note:
+		# we are filtering the chunks against the confidence level here
+		# this is not the correct place as defined in the Sequence Diagram
+		# confirm with API designer if this is acceptable
+
+		# TODO: move confidence_level to env or some other dynamic variable
+		# instead of hardcoding
 
 		chunks = self._ask(question)
+
+		# TODO: sort chunks by confidence level
 		valid_chunks = [
-			chunk["chunkId"]
+			chunk
 			for chunk in chunks
 			if chunk["confidence"] >= confidence_level
 		]
@@ -53,6 +70,7 @@ class InterferenceRunnerService:
 
 
 class ChunkHolderService:
+	# TODO: load from env
 	ENDPOINT_BASE = "https://chunk-holder.hw.ask-ai.co/"
 	API_KEYS = (
 		"d486a94c-29f4-453a-a822-f909a97dbfa7",
@@ -74,7 +92,7 @@ class ChunkHolderService:
 
 		# TODO: handle errors
 
-	def _get_credentials(self):
+	def _get_credentials(self) -> dict:
 		return {
 			"Authorization": self._get_jwt_token()
 		}
@@ -92,13 +110,13 @@ class ChunkHolderService:
 		if response.status_code == 200:
 			return response.json()
 
-	def get_chunk_contents(self, chunk_ids: list) -> list:
+	def get_chunk_contents(self, chunks: list) -> list:
 		"""Return contents of multiple Chunks"""
 		credentials = self._get_credentials()
 
 		# TODO: can possibly support async calls to individual chunk content
 		# to parallelize instead of serial get
-		return [
-			self.get_chunk_content(chunk_id, credentials)
-			for chunk_id in chunk_ids
-		]
+		return {
+			chunk["chunkId"]: self.get_chunk_content(chunk["chunkId"], credentials)
+			for chunk in chunks
+		}
