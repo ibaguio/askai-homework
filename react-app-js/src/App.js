@@ -32,9 +32,9 @@ function App() {
       <button onClick={handleSearch}>Search</button>
       <div>
         {results.map((item, index) => (
-          <div key={index} style={{ border: '1px solid #ccc', margin: '10px', padding: '10px' }}>
-            <div dangerouslySetInnerHTML={{ __html: item.content }} />
-            <div><strong>Confidence</strong>: {item.confidence.toFixed(2)}% </div>
+          <div key={index} style={{ margin: '10px', padding: '10px', maxWidth: '600px' }}>
+            <div style={{border: '1px solid #ccc' }} dangerouslySetInnerHTML={{ __html: item.content }} />
+            <div style={{border: '1px solid #ccc' }}><strong>Confidence</strong>: {item.confidence.toFixed(2)}% </div>
           </div>
         ))}
       </div>
