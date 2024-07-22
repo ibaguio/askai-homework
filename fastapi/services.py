@@ -50,3 +50,45 @@ class InterferenceRunnerService:
 		]
 
 		return valid_chunks
+
+
+class ChunkHolderService:
+	ENDPOINT_BASE = "https://chunk-holder.hw.ask-ai.co/"
+	API_KEYS = (
+		"d486a94c-29f4-453a-a822-f909a97dbfa7",
+		"aa156e6b-0f41-4ef7-ae7a-f9ff8b5b5ad3",
+		"43ecda4c-7ee1-4acb-a50f-7f81e4c90719",
+	)
+
+	def _get_jwt_token(self) -> str:
+		response = requests.post(
+			f"{self.ENDPOINT_BASE}/auth/generate-token",
+			headers={
+				"X-API-Key": random.choice(self.API_KEYS),
+			}
+		)
+
+		if response.status_code == 200:
+			token = response.json()["token"]
+			return token
+
+		# TODO: handle errors
+
+	def _get_credentials(self):
+		headers = {
+			"Authorization": self._get_jwt_token()
+		}
+		print(headers)
+		return headers
+
+	def get_chunk_content(self, chunk_id) -> str:
+		# TODO: add validation that chunk_id is a uuid?
+		assert isinstance(chunk_id, str)
+
+		response = requests.get(
+			f"{self.ENDPOINT_BASE}/chunks/{chunk_id}",
+			headers=self._get_credentials()
+		)
+
+		if response.status_code == 200:
+			return response.json()
